@@ -1,4 +1,3 @@
-# app/github_manager.py
 from github import Github, GithubException
 import base64
 import time
