@@ -1,4 +1,3 @@
-# app/llm_generator.py
 import openai
 import json
 import base64
@@ -10,9 +9,9 @@ class LLMCodeGenerator:
         if not Config.OPENAI_API_KEY:
             raise ValueError("OpenAI API key not configured. Set OPENAI_API_KEY in .env file")
 
-        # For openai==0.28.1
-        openai.api_key = Config.OPENAI_API_KEY
-        print("✅ OpenAI client initialized")
+        # For openai>=1.0.0 - new client syntax
+        self.client = openai.OpenAI(api_key=Config.OPENAI_API_KEY)
+        print("✅ OpenAI client initialized (v1.0+)")
 
     def generate_app(self, brief: str, attachments: list, checks: list) -> dict:
         """Generate complete app code using LLM based on brief and requirements"""
@@ -68,8 +67,8 @@ Return ONLY the JSON object with the code files.
 """
 
         try:
-            # For openai==0.28.1
-            response = openai.ChatCompletion.create(
+            # For openai>=1.0.0 - new API syntax
+            response = self.client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": system_prompt},
